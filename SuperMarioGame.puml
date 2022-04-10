@@ -1,0 +1,236 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+class SuperMarioGame{
+    +main()
+    +init()
+    '    调用 StaticValue.init()
+    '    生命值设置成 5
+    '    分数设置成 0
+    +gameBegin()
+    '    调用GameBegin.showBackGround()
+    '    不停调用GameBegin.checkBegin()，直到成功调用
+    +gaming()
+    '    调用 Gaming.begin()
+    +gameEnd()
+    '   调用 GameEnd.begin()
+}
+
+class Keyboard {
+    +beginRead()
+    '  从键盘读取信息
+    '  如果是 'Enter'，返回成功信息
+    '  反之，返回错误信息
+    +gamingRead()
+    '    从键盘读取信息
+    '    如果是 'Space'，调用 Mario.jump()
+    '    如果是 'A'，调用 Mario.leftMove()
+    '    如果是 'D'，调用 Mario.rightMove()
+}
+
+class GameBegin {
+    +showBackGround()
+    '    调用 StaticValue.showBeginImage()
+    +checkBegin()
+    '    调用 Keyboard.beginRead()
+}
+
+class Gaming {
+    -onTheSceneEnemy:List<Enemy>
+    '    在显示屏上敌人
+    -onTheSceneProp:List<Prop>
+    '    在显示屏上道具
+    -obstruction:List<Obstruction>
+    '    所有障碍物的集合
+    +begin()
+    '    初始化生命值和分数
+    '    while(true) {
+    '        调用 init() 初始化信息
+    '        while(true){
+    '            调用running()
+    '            直到返回死亡或通关信息,结束循环
+    '        }
+    '        如果死亡，更改生命值 Mario.setLife()
+    '        判断剩余生命值为0，结束循环
+    '        判断是否通关，结束循环
+    '    }
+    +running()
+    '    调用 creatEnemy()
+    '    调用 creatProp()
+    '    调用 BackGround.creatBackGround()
+    '    调用 Keyboard.gamingRead()
+    '    调用所有怪兽的 Enemy.move()
+    '    调用 Mario.checkInteractive() 来获取信息
+    '    返回死亡或通关信息
+    +creatEnemy()
+    '    随机生成怪兽，添加至怪兽集合
+    +creatEnemy()
+    '    随机生成道具, 添加至道具集合
+    +init():void
+    '    重置所有信息（除了生命值和分数），游戏回到开始的地方
+    '    清空怪兽集合，清空道具集合
+    '    重置角色坐标,调用 Mario.setX(),Mario.setY()
+    '    显示一张图片，持续两秒，
+    '    显示剩余生命值
+    +getOnTheSceneEnemy():List<Enemy>
+    '    返回怪兽集合
+    +getOnTheSceneProp():List<Prop>
+    '    返回道具集合
+    +getObstruction():List<Obstruction>
+    '    返回障碍物
+    +setOnTheSceneEnemy(List<Enemy>)
+    '    修改怪兽集合
+    +setOnTheSceneProp(List<Prop>)
+    '    修改道具集合
+}
+
+class GameEnd {
+    +begin()
+    '    StaticValue.showEndImage()
+    '    显示分数 Mario.getScore()
+}
+
+class BackGround {
+    +creatBackGround()
+    '    场景构造方法：
+    '    调用马里奥坐标，计算当前显示屏展示的地图左下与右上角坐标
+    '    调用展示砖块函数 showObstruction
+    '    调用展示怪兽函数 showEnemy
+    '    调用展示马里奥函数 Mario.showImage()
+    '    调用道具显示函数 showProp
+    '    如果旗子可以显示，调用 showFlagImage
+    +showObstruction()
+    '    调用 Gaming.getObstruction
+    '    遍历所有砖块，如果当前砖块在地图坐标范围内
+    '    显示该砖块，调用 StaticValue.showObstructionImage
+    +showEnemy()
+    '    调用 getOnTheSceneEnemy()
+    '    遍历所有怪兽，如果怪兽在地图坐标范围内
+    '    调用怪兽的显示方法
+    '    StaticValue.showTriangleImage()
+    '    StaticValue.showTurtleImage()
+    '    反之，从集合删除该怪兽
+    '    在最后调用 setOnTheSceneEnemy()
+}
+
+class Mario {
+    -life:int
+    '    生命值
+    -score:int
+    '    分数
+    -x:int
+    '    横坐标
+    -y:int
+    '    纵坐标
+    +checkInteractive()
+    '    根据坐标之间的距离
+    '    调用 +getOnTheSceneEnemy
+    '    调用 +getOnTheSceneProp
+    '    对道具：
+    '        金币，加分
+    '        蘑菇,换皮肤,调用Mario.setMarioImage()
+    '    对怪兽：
+    '        返回死亡信息
+    '    对旗子：
+    '        调用 StaticValue.showWinImage()
+    '        返回通关信息
+    +getX():int
+    +getY():int
+    +jump()
+    '    如果可以跳跃，就跳跃
+    +leftMove()
+    '    如果可以左移，就左移
+    +rightMove()
+    '    如果可以右移，就左移
+    +getLife():int
+    '    返回角色生命值
+    +getScore():int
+    '    返回角色分数
+    +showImage():BufferedImage
+    '    调用 StaticValue.showMarioImage
+    +setLife(int life:int)
+    '    修改生命值
+    +setScore(int score:int)
+    '    修改分数
+    +setX(int x:int):void
+    +setY(int y:int):void
+    '    修改坐标
+}
+
+class Enemy{
+    -x:int
+    -y:int
+    +creatEnemy(int x,int y,boolean type)
+    '    敌人构建函数
+    +getX():int
+    +getY():int
+    +move()
+    '    如果能往下，必定往下
+    '    随机向左向右移动
+}
+
+class Obstruction{
+    -x:int
+    -y:int
+    +getX():int
+    +getY():int
+}
+
+class StaticValue{
+    -startImage:BufferedImage
+    '    开始图片
+    -bgImage:BufferedImage
+    '    游戏背景
+    -marioImage:List<BufferedImage>
+    '    马里奥的所有皮肤
+    -marioImageNumber
+    '    当前是第几个皮肤
+    -flagImage:BufferedImage
+    '    旗子图片
+    -winImage:BufferedImage
+    '    通关背景图片
+    -triangleImage:List<BufferedImage>
+     '   板栗仔图片
+    -turtleImage:List<BufferedImage>
+    '    乌龟图片
+    -obstructionImage:List<BufferedImage>
+    '    砖块图片
+    -endImage:BufferedImage
+    '    结束图片
+    +init()
+    '    从本地读入图片
+    +showBeginImage()
+    '    显示游戏开始界面
+    +showBeginImage()
+    '    显示游戏背景
+    +showMarioImage()
+    '    显示马里奥图片
+    +showFlagImage()
+    '    显示旗子
+    +showWinImage()
+    '    显示胜利背景
+    +showObstructionImage()
+    '    显示砖块
+    +showTriangleImage()
+    '    显示板栗仔
+    +showTurtleImage()
+    '    显示乌龟
+    +showEndImage()
+    '    显示游戏结束图片
+    +setMarioImage()
+    '    修改 marioImageNumber
+}
+
+skinparam groupInheritance 2
+
+SuperMarioGame -down->  "1" GameBegin
+SuperMarioGame -down-> "1" Gaming
+SuperMarioGame -down-> "1" GameEnd
+
+Gaming o-- "1" Mario
+Gaming o-- "1..*" Enemy
+Gaming o-- "1..*" Obstruction
+Gaming o-- "1" BackGround
+
+@enduml
