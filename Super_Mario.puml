@@ -1,0 +1,213 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+skinparam classAttributeIconSize 0
+
+interface Enemy extends Runnable
+class SuperMarioGame extends JFrame implements KeyListener
+class BackGround
+class Mario
+class Mogu
+class Obstacle
+class Shirenhua
+class StaticValue
+
+skinparam GroupInheritance 2
+skinparam GroupAssociation 3
+
+SuperMarioGame"1"-down->"*"BackGround:allBg nowBg
+SuperMarioGame"1"-down->"1"Mario:mario
+SuperMarioGame-down->StaticValue:init()
+
+Mogu"*"-up->"1"BackGround:backGround
+Mogu-up->StaticValue
+Mogu...|>Enemy
+
+Shirenhua-up->StaticValue
+Shirenhua..|>Enemy
+
+Mario-right->BackGround:backGround
+Mario-right->StaticValue
+Mario..|>Runnable
+
+BackGround-down->"*"Obstacle:obstacleList
+BackGround-down->"*"Mogu:enemyList
+BackGround-down->"*"Shirenhua:enemyList
+BackGround-right->StaticValue
+
+Obstacle"*"-up->"1"BackGround:backGround
+Obstacle-up->StaticValue
+Obstacle..|>Runnable
+
+
+
+
+
+
+interface Enemy{
+
+    {abstract}getX():int
+    {abstract}getY():int
+    {abstract}getType():int
+    {abstract}getShow():BufferedImage
+    {abstract}death():void
+}
+
+class SuperMarioGame{
+    -allBg:List<BackGround>
+    -nowBg:BackGround
+    -offScreenImage:Image
+    -mario:Mario
+    -thread:Thread
+
+    +keyPressed(KeyEvent e):void
+    +keyReleased(KeyEvent e):void
+    +keyPressed(KeyEvent e):void
+    +main(String args[]):void
+    +paint(Graphics g):void
+    +run():void
+    +SuperMarioGame()
+}
+
+class BackGround{
+    -bgImage:BufferedImage
+    -sort:int
+    -flag:boolean
+    -obstacleList:List<Obstacle>
+    -enemyList:List<Enemy>
+    -gan:BufferedImage
+    -tower:BufferedImage
+    -isReach:boolean
+    -isBase:boolean
+
+    +BackGround()
+    +BackGround(int sort, boolean flag)
+    -BackGround1():void
+    -BackGround2():void
+    -BackGround3():void
+    +getBgImage():BufferedImage
+    +getEnemyList():List<Enemy>
+    +getFlag():boolean
+    +getGan():BufferedImage
+    +getObstacleList():List<Obstacle>
+    +getSort():int
+    +getTower():BufferedImage
+    +isReach():boolean
+    +setBase(boolean isBase):void
+    +setEnemyList(List<Enemy> enemyList):void
+    +setReach(boolean isReach):void
+}
+
+class Mario{
+    -x:int
+    -y:int
+    -status:String
+    -show:BufferedImage
+    -backGround:BackGround
+    -thread:Thread
+    -xSpeed:int
+    -ySpeed:int
+    -index:int
+    -upTime:int
+    -isOK:boolean
+    -isDeath:boolean
+    -score:int
+
+    +death():void
+    +fall():void
+    +getScore():int
+    +getShow():BufferedImage
+    +getX():int
+    +getY():int
+    +isDeath():boolean
+    +isOK():boolean
+    +jump():void
+    +leftMove():void
+    +leftStop():void
+    +Mario()
+    +Mario(int x,int y)
+    +rightMove():void
+    +rightStop():void
+    +run():void
+    +setBackGround(BackGround backGround):void
+    +setOK(boolean isOK):void
+    +setX(int x):void
+    +setY(int y):void
+}
+
+class Mogu{
+    -x:int
+    -y:int
+    -type:int
+    -face_to:boolean
+    -show:BufferedImage
+    -backGround:BackGround
+    -thread:Thread
+    -image_type:int
+
+    +Mogu(int x,int y,boolean face_to, int type, BackGround backGround)
+    +death():void
+    +run():void
+    +getX():int
+    +getY():int
+    +getShow():BufferedImage
+    +getType():int
+}
+
+class Obstacle{
+    -x:int
+    -y:int
+    -type:int
+    -show:BufferedImage
+    -backGround:BackGround
+    -thread:Thread
+
+    +Obstacle(int x,int y,int type, BackGround backGround)
+    +run():void
+    +getX():int
+    +getY():int
+    +getShow():BufferedImage
+    +getType():int
+    +getBg():BackGround
+}
+
+class Shirenhua{
+    -x:int
+    -y:int
+    -type:int
+    -face_to:boolean
+    -show:BufferedImage
+    -thread:Thread
+    -image_type:int
+    -max_up:int
+    -max_down:int
+
+    +Shirenhua(int x,int y,boolean face_to, int type, int max_up, int max_down)
+    +run():void
+    +getX():int
+    +getY():int
+    +getShow():BufferedImage
+    +getType():int
+    +death():void
+}
+
+class StaticValue{
+    +bg:BufferedImage
+    +bg2:BufferedImage
+    +jump_L:BufferedImage
+    +jump_R:BufferedImage
+    +stand_L:BufferedImage
+    +stand_R:BufferedImage
+    +tower:BufferedImage
+    +gan:BufferedImage
+    +obstacle:List<BufferedImage>
+    +run_L:List<BufferedImage>
+    +run_R:List<BufferedImage>
+    +mogu:List<BufferedImage>
+    +shirenhua:List<BufferedImage>
+    +path:String
+
+    +init():void
+}
+@enduml
